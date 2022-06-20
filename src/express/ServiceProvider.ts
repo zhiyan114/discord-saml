@@ -11,21 +11,23 @@ import { saml, guildID, branding } from '../../config.json'
 import { DiscordAPIError, Constants } from "discord.js";
 import { configureMemberStatus, resetMemberStatus } from '../discord/SPRoleHandler';
 
-// Ignore validator by default
-setSchemaValidator({
-    validate: (response: string) => {
-      return Promise.resolve('skipped');
-    }
-});
 // If the platform supports it, use a validator for better security (services like replit won't support it)
-const xsdValidator = require('@authenio/samlify-xsd-schema-validator')
-if(xsdValidator) setSchemaValidator(xsdValidator);
+try {
+    const xsdValidator = require('@authenio/samlify-xsd-schema-validator')
+    if(xsdValidator) setSchemaValidator(xsdValidator);
+} catch(ex) {
+    setSchemaValidator({
+        validate: (response: string) => {
+          return Promise.resolve('skipped');
+        }
+    });
+}
 
 // Default Page Display
 restServer.get('/',(req,res)=>{
-    const templatePage = fs.readFileSync(__dirname+"/htmlFiles/index.html").toString("utf8");
-    templatePage.replace(/{orgName}/gi,branding.name); // Replace all placeholder text for {orgName} to the branding name
-    res.contentType("application/html").send(templatePage);
+    let templatePage = fs.readFileSync(__dirname+"/htmlFiles/index.html").toString("utf8");
+    templatePage = templatePage.replace(/{orgName}/gi,branding.name); // Replace all placeholder text for {orgName} to the branding name
+    res.contentType("text/html").send(templatePage);
 })
 
 restServer.get('/sp/auth',(req,res)=>{
@@ -60,8 +62,8 @@ restServer.post('/sp/acs', urlencoded({ extended: false }), async (req,res) => {
         // Let the role handler do the work
         await configureMemberStatus(member, result.extract.attribute && result.extract.attribute[saml.attributeMapping.name], result.extract.attribute && result.extract.attribute[saml.attributeMapping.group]);
         // Prepare success page and send it
-        const templatePage = fs.readFileSync(__dirname+"/htmlFiles/acs.html").toString("utf8");
-        templatePage.replace(/{orgName}/gi, branding.name); // Replace all placeholder text for {orgName} to the branding name
+        let templatePage = fs.readFileSync(__dirname+"/htmlFiles/acs.html").toString("utf8");
+        templatePage = templatePage.replace(/{orgName}/gi, branding.name); // Replace all placeholder text for {orgName} to the branding name
         res.contentType("application/html").send(templatePage);
     } catch(ex : any) {
         // Handle some of the possible user generated errors

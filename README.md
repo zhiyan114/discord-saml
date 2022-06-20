@@ -26,8 +26,9 @@ File: config.json
     * webServerPort - Custom Port for the webserver (regardless if it http or https mode)
 * logChannelID - Channel ID to log all information (including user authentications)
 * saml - All SAML related configuration
-    * idpConfig - Configuration for your IdP (see: https://samlify.js.org/#/idp-configuration for manual configuration)
-    * metadata - A xml string containing your IdP information (other field of the configuration are not required if this field is provided)
+    * idpConfig - Configuration for your IdP 
+        * metadataURL - The URL to your IdP's metadata (other field of the configuration are not required if this field is provided)
+        * samlifyConfig - Samlify's IdP Configuration (see: https://samlify.js.org/#/idp-configuration for documentation); metadataURL must be nil;
     * attributeMapping - Standard Attribute Mapping for saml
         * name - Mapping for user's full name (automatically set authenticated user's nickname to their IdP's name)
         * group - Mapping for user's assigned groups/roles (automatically assign discord roles based on the groupMapping's configuration)

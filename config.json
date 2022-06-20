@@ -13,7 +13,10 @@
     "logChannelID": "",
     "saml": {
         "idpConfig":{
-            "metadata": ""
+            "metadataURL": "",
+            "samlifyConfig": {
+                
+            }
         },
         "attributeMapping": {
             "name":"",

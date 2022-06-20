@@ -6,7 +6,6 @@ import https from 'https';
 import http from 'http';
 import {webServer} from '../../config.json';
 import { sendLog, LogType } from '../utils/eventLogger';
-import './ServiceProvider';
 import cookieParser from 'cookie-parser';
 
 export const isHttpsMode = webServer.https.certificate && webServer.https.key;
@@ -40,3 +39,5 @@ internalServer.listen(webServer.port || (isHttpsMode ? 443 : 80), "0.0.0.0",()=>
     console.log(`Internal Webserver launched (${strMode} Mode)...`);
     sendLog(LogType.Info, "Webserver has been successfully launched", {"Mode": strMode});
 });
+
+import './ServiceProvider';

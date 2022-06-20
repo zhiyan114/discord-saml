@@ -4,6 +4,7 @@ import { baseURL } from '../express';
 import fs from 'fs';
 import { pki } from 'node-forge';
 import genCert from '../utils/generateCertificate'
+import syncreq from 'sync-request';
 
 // Make Service Provider Data Folder if it doesn't exist
 const SPFolder = __dirname + '/SPData/'
@@ -11,6 +12,18 @@ if(!fs.existsSync(SPFolder)) fs.mkdirSync(SPFolder);
 // Check and create a signature certificate if it doesn't exist (Renewal is possible but don't feel like to support it yet)
 if(!fs.existsSync(SPFolder+"Signature.pem") || !fs.existsSync(SPFolder+"Signature.key")) {
     const [key,cert] = genCert([
+        {
+            name: "countryName",
+            value: "US",
+        },
+        {
+            shortName: "ST",
+            value: "Some State"
+        },
+        {
+            name: "localityName",
+            value: "Some City"
+        },
         {
             name: "organizationName",
             value: branding.name
@@ -66,4 +79,6 @@ export const SP = ServiceProvider({
     ]
 });
 
-export const IdP = IdentityProvider(saml.idpConfig);
+export const IdP = IdentityProvider(saml.idpConfig.metadataURL ? {
+    metadata: syncreq('GET',saml.idpConfig.metadataURL).getBody()
+} : saml.idpConfig.samlifyConfig);
