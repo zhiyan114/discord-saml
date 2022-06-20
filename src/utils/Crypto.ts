@@ -10,7 +10,7 @@ const cryptoAlg : CipherGCMTypes = "aes-256-gcm"; // You have to declear the typ
 
 export const encrypt = (data : Buffer | string): Buffer => {
     // Convert data to Buffer if it's a string
-    if(typeof data === "string") data = Buffer.from(data);
+    if(typeof data === "string") data = Buffer.from(data,"utf8");
     // Generate a random IV
     const randIV = randomBytes(12); // We're following the standard implementation for AES-GCM which uses 96-bit IV size (https://dl.acm.org/doi/pdf/10.5555/2206251)
     // Start Encrypting the data
@@ -20,7 +20,7 @@ export const encrypt = (data : Buffer | string): Buffer => {
 }
 export const decrypt = (cipherData : Buffer | string): Buffer => {
     // Convert cipherData to Buffer if it's a string
-    if(typeof cipherData === "string") cipherData = Buffer.from(cipherData);
+    if(typeof cipherData === "string") cipherData = Buffer.from(cipherData,"base64");
     // Extract each individual data from the concatenated buffer
     const IV = cipherData.slice(0, 12);
     const Data = cipherData.slice(12, cipherData.length-28);

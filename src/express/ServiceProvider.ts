@@ -1,14 +1,14 @@
 import { restServer } from ".";
 import { SP, IdP } from '../utils/samlProvider';
 import fs from 'fs';
-import { branding } from '../../config.json';
-import { encrypt } from "../utils/Crypto";
+import { encrypt,decrypt } from "../utils/Crypto";
 import { isHttpsMode, baseURL } from '../express';
 import { urlencoded } from "express";
 import { setSchemaValidator } from 'samlify';
 import { sendLog, LogType } from '../utils/eventLogger'
 import { client } from '../discord';
-import {saml} from '../../config.json'
+import { saml, guildID, branding } from '../../config.json'
+import { DiscordAPIError, Constants } from "discord.js";
 
 // Ignore validator by default
 setSchemaValidator({
@@ -26,30 +26,47 @@ restServer.get('/',(req,res)=>{
     templatePage.replace(/{orgName}/gi,branding.name); // Replace all placeholder text for {orgName} to the branding name
     res.contentType("application/html").send(templatePage);
 })
+
 restServer.get('/sp/auth',(req,res)=>{
     if(!req.query.UID) return res.sendStatus(400).send("Invalid Authentication Request");
     res.cookie('DiscordUID', encrypt(req.query.UID as string).toString("base64"),{maxAge: 900, httpOnly: !isHttpsMode }) // Shouldn't take you more than 15 minutes to complete the authentication smh
     const {context} = SP.createLoginRequest(IdP, 'redirect');
     return res.redirect(context);
 })
+
 restServer.get('/sp/metadata',(req,res)=>{
     res.send(SP.getMetadata());
 })
+
 restServer.post('/sp/acs', urlencoded({ extended: false }), async (req,res) => {
-    return res.sendStatus(501).send("INCOMPLTE");
+    //return res.sendStatus(501).send("INCOMPLTE");
     if(!req.cookies['DiscordUID']) return res.sendStatus(400).send("Invalid Authentication Response");
-    SP.parseLoginResponse(IdP,'post',req).then(result => {
+    try {
+        const result = await SP.parseLoginResponse(IdP,'post',req);
+
+        // Get and check guild
+        const guild = client.guilds.cache.find(obj=> obj.id === guildID);
+        if(!guild) return res.sendStatus(501).send("Configuration Error: Guild ID is empty");
+        // Get and check user
+        const member = await guild.members.fetch(decrypt(req.cookies['DiscordUID']).toString("utf-8"))
         // TODO: Use discord client to complete user authentication (or re-sync roles)
+
+        // Prepare success page and send it
         const templatePage = fs.readFileSync(__dirname+"/htmlFiles/acs.html").toString("utf8");
         templatePage.replace(/{orgName}/gi, branding.name); // Replace all placeholder text for {orgName} to the branding name
         res.contentType("application/html").send(templatePage);
-    }).catch(ex => {
+    } catch(ex : any) {
+        // Handle some of the possible user generated errors
+        if(ex instanceof DiscordAPIError && ex.code == Constants.APIErrors.UNKNOWN_MEMBER) return res.sendStatus(400).send(`You are no longer in ${branding.name}'s discord server`);
+        if(ex instanceof Error && ex.name == "ERR_CRYPTO_INVALID_AUTH_TAG") return res.sendStatus(400).send("Invalid Authentication Response");
+        // Other errors that aren't handled or non-user errors
         sendLog(LogType.Error,ex,{
-            "From": `${baseURL}/sp/acs`
+            "From": `${baseURL}/sp/acs`,
+            "isDiscordError": (ex instanceof DiscordAPIError).toString()
         })
         console.log("ACS Error: "+ex)
         return res.sendStatus(500).send("SAML Authentication Error, IT Department has been notified")
-    })
+    }
 })
 restServer.post('/sp/slo', urlencoded({ extended: false }), (req,res)=>{
     // TODO: Complete Single Logout Service
