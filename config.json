@@ -1,0 +1,32 @@
+{
+    "clientID": "",
+    "botToken": "",
+    "guildID": "",
+    "webServer": {
+        "FQDN": "",
+        "port": null,
+        "https":{
+            "certificate": "",
+            "key": ""
+        }
+    },
+    "logChannelID": "",
+    "saml": {
+        "idpConfig":{
+            "metadataURL": "",
+            "samlifyConfig": {
+                
+            }
+        },
+        "attributeMapping": {
+            "name":"",
+            "group":""
+        },
+        "groupMapping":{
+            "ExampleGroup":["ExampleRlole"]
+        }
+    },
+    "branding":{
+        "name":""
+    }
+}
