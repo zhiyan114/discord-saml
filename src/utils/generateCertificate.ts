@@ -11,6 +11,5 @@ export default (attributes: pki.CertificateField[], expiration?: Date) : [pki.rs
     if(!expiration) cert.validity.notAfter.setFullYear(cert.validity.notAfter.getFullYear()+25); // I recommend 25 years so that way you don't need to worry about constant renewal
     cert.setIssuer(attributes);
     cert.sign(key.privateKey);
-
     return [key.privateKey, cert];
 }
