@@ -73,12 +73,13 @@ export const SP = ServiceProvider({
             Location: `${baseURL}sp/acs`
         }
     ],
-    //singleLogoutService: [
-    //    {
-    //        Binding: "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-    //        Location: `${baseURL}sp/slo`
-     //   }
-    //]
+    singleLogoutService: [
+        {
+            isDefault: true,
+            Binding: "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+            Location: `${baseURL}sp/slo`
+        }
+    ]
 });
 
 export const IdP = IdentityProvider(saml.idpConfig.metadataURL ? {

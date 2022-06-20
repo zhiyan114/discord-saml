@@ -5,7 +5,7 @@ import { CipherGCMTypes, createCipheriv, createDecipheriv, randomBytes } from 'c
 // Don't you dare export this key, go get your own instead of being a copycat.
 const masterKey = randomBytes(32); // Remember, this is used internally so the key value shouldn't matter. It also decreases your security if the key is hardcoded.
 
-const cryptoAlg : CipherGCMTypes = "aes-256-gcm"; // You have to declear the type otherwise I'll use the default crypto type which doesn't have getAuthTag() smh
+const cryptoAlg = "aes-256-gcm";
 
 
 export const encrypt = (data : Buffer | string): Buffer => {

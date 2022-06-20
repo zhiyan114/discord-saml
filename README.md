@@ -12,6 +12,8 @@ Service Provider information are automatically generated when you compile and st
 
 Your base URL will be the protcol prefix follow by the FQDN you set in your configuration file `http(s)://example.com/`
 
+For SLO, please ensure that attribute `name` has the same value as `Name ID (urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified)` since IdP initialized signout requires it
+
 
 # Configuration Guide
 File: config.json
