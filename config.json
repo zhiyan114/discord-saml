@@ -20,6 +20,7 @@
             "group":""
         },
         "groupMapping":{
+            "ExampleGroup":["ExampleRlole"]
         }
     },
     "branding":{

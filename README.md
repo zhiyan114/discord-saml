@@ -5,6 +5,7 @@ A self-host enterprise authentication solution for your discord server. SAML2.0 
 Service Provider information are automatically generated when you compile and start the server. The following lists all the SP's URL:
 * Metadata: `{baseURL}/sp/metadata`
 * Authentication URL: `{baseURL}/sp/auth` (URL where authentication request will be made and redirect user to the IdP's sign-in page)
+* Signout URL: `{baseURL}/sp/signout` (URL where authenticated user can signout of the IdP and from the organization's server)
 * Entity ID: `{baseURL}/sp`
 * Assertion Consumer Service: `{baseURL}/sp/acs`
 * Single Logout Service: `{baseURL}/sp/slo`

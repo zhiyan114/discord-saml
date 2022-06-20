@@ -4,7 +4,7 @@ import { webServer, branding} from '../../../config.json'
 import {baseURL} from '../../express'
 const AuthReqCmd = new SlashCommandBuilder()
     .setName('authenticate')
-    .setDescription(`Request a SAML authentication`)
+    .setDescription(`Login to ${branding.name}'s server`)
 
 /* Function Builder */
 const AuthReqFunc = async (interaction : CommandInteraction) => {
