@@ -39,7 +39,7 @@ restServer.post('/sp/acs', urlencoded({ extended: false }), async (req,res) => {
     return res.sendStatus(501).send("INCOMPLTE");
     if(!req.cookies['DiscordUID']) return res.sendStatus(400).send("Invalid Authentication Response");
     SP.parseLoginResponse(IdP,'post',req).then(result => {
-        // TODO: Use discord client to complete user authentication
+        // TODO: Use discord client to complete user authentication (or re-sync roles)
         const templatePage = fs.readFileSync(__dirname+"/htmlFiles/acs.html").toString("utf8");
         templatePage.replace(/{orgName}/gi, branding.name); // Replace all placeholder text for {orgName} to the branding name
         res.contentType("application/html").send(templatePage);

@@ -1,8 +1,8 @@
-import {idpConfig, branding} from '../../config.json'
+import {saml, branding} from '../../config.json'
 import {IdentityProvider, ServiceProvider} from 'samlify';
 import { baseURL } from '../express';
 import fs from 'fs';
-import { pki} from 'node-forge';
+import { pki } from 'node-forge';
 import genCert from '../utils/generateCertificate'
 
 // Make Service Provider Data Folder if it doesn't exist
@@ -66,4 +66,4 @@ export const SP = ServiceProvider({
     ]
 });
 
-export const IdP = IdentityProvider(idpConfig);
+export const IdP = IdentityProvider(saml.idpConfig);
