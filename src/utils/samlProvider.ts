@@ -53,7 +53,7 @@ if(!fs.existsSync(SPFolder+"Encryption.pem") || !fs.existsSync(SPFolder+"Encrypt
 }
 
 export const SP = ServiceProvider({
-    entityID: `${baseURL}/sp`,
+    entityID: `${baseURL}sp`,
     authnRequestsSigned: false,
     wantAssertionsSigned: true,
     wantMessageSigned: true,
@@ -63,22 +63,25 @@ export const SP = ServiceProvider({
     privateKey: fs.readFileSync(SPFolder + 'Signature.key', 'utf8'),
     encryptCert: fs.readFileSync(SPFolder + 'Encryption.pem', 'utf8'),
     encPrivateKey: fs.readFileSync(SPFolder + 'Encryption.key', 'utf8'),
+    nameIDFormat: [
+        "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+    ],
     assertionConsumerService: [
         {
             isDefault: true,
             Binding: "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-            Location: `${baseURL}/sp/acs`
+            Location: `${baseURL}sp/acs`
         }
     ],
-    singleLogoutService: [
-        {
-            isDefault: true,
-            Binding: "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
-            Location: `${baseURL}/sp/slo`
-        }
-    ]
+    //singleLogoutService: [
+    //    {
+    //        Binding: "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
+    //        Location: `${baseURL}sp/slo`
+     //   }
+    //]
 });
 
 export const IdP = IdentityProvider(saml.idpConfig.metadataURL ? {
-    metadata: syncreq('GET',saml.idpConfig.metadataURL).getBody()
+    metadata: syncreq('GET',saml.idpConfig.metadataURL).getBody(),
+    isAssertionEncrypted: true,
 } : saml.idpConfig.samlifyConfig);

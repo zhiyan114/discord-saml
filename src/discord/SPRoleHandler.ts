@@ -25,11 +25,11 @@ export const configureMemberStatus = async (member: GuildMember, nickname?: stri
 }
 
 export const resetMemberStatus = async (member: GuildMember) => {
-    member.setNickname(null,"SAML2.0 Signout");
+    await member.setNickname(null,"SAML2.0 Signout");
     for(const discordGroupIDList of Object.values(saml.groupMapping)) {
         for(const discordGroupID of discordGroupIDList) {
             const SAMLRole = member.roles.cache.find(role=> role.id === discordGroupID);
-            if(SAMLRole) member.roles.remove(SAMLRole);
+            if(SAMLRole) await member.roles.remove(SAMLRole);
         }
     }
 }

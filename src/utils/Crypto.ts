@@ -23,8 +23,8 @@ export const decrypt = (cipherData : Buffer | string): Buffer => {
     if(typeof cipherData === "string") cipherData = Buffer.from(cipherData,"base64");
     // Extract each individual data from the concatenated buffer
     const IV = cipherData.slice(0, 12);
-    const Data = cipherData.slice(12, cipherData.length-28);
-    const Tag = cipherData.slice(cipherData.length-28,cipherData.length);
+    const Data = cipherData.slice(12, cipherData.length-16);
+    const Tag = cipherData.slice(cipherData.length-16,cipherData.length);
     // Start Decrypting the data
     const decipher = createDecipheriv(cryptoAlg,masterKey,IV);
     decipher.setAuthTag(Tag);

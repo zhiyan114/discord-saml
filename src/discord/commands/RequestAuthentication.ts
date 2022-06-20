@@ -10,8 +10,8 @@ const AuthReqCmd = new SlashCommandBuilder()
 const AuthReqFunc = async (interaction : CommandInteraction) => {
     const embed = new MessageEmbed();
     embed.setTitle('Authentication Request');
-    embed.setDescription(`Please click the link to be redirected to ${branding.name}'s authentication page: ${baseURL}/sp/auth?UID=${interaction.user.id}`);
-    embed.setURL(`${baseURL}/sp/auth?UID=${interaction.user.id}`);
+    embed.setDescription(`Please click the link to be redirected to ${branding.name}'s authentication page: ${baseURL}sp/auth?UID=${interaction.user.id}`);
+    embed.setURL(`${baseURL}sp/auth?UID=${interaction.user.id}`);
     embed.setColor('#00FFFF');
     return await interaction.reply({embeds:[embed], ephemeral: true});
 }

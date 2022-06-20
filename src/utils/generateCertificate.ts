@@ -9,33 +9,7 @@ export default (attributes: pki.CertificateField[], expiration?: Date) : [pki.rs
     cert.validity.notBefore = new Date();
     cert.validity.notAfter = expiration || new Date();
     if(!expiration) cert.validity.notAfter.setFullYear(cert.validity.notAfter.getFullYear()+25); // I recommend 25 years so that way you don't need to worry about constant renewal
-    // Plz don't change it. This serves as a "credit", promise only your IT department will ever see this unless one of your users dig into the SAML request/response.
-    cert.setIssuer([
-        {
-            name: "countryName",
-            value: "US"
-        },
-        {
-            shortName: "ST",
-            value: "Some State"
-        },
-        {
-            name: "localityName",
-            value: "Some City"
-        },
-        {
-            name: "organizationName",
-            value: "zhiyan114's Internal Team"
-        },
-        {
-            shortName: "OU",
-            value: "IT Department"
-        },
-        {
-            name: "commonName",
-            value: "zhiyan114 - Discord SAML Developer",
-        }
-    ]);
+    cert.setIssuer(attributes);
     cert.sign(key.privateKey);
 
     return [key.privateKey, cert];

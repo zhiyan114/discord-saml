@@ -6,6 +6,7 @@ import { initailizeLogger, sendLog, LogType } from '../utils/eventLogger';
 
 /* Client Loader */
 export const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_MEMBERS], partials: ["CHANNEL"] });
+import './CmdHandler';
 client.on('ready', async () => {
   client.user!.setPresence({
     status: "dnd",
