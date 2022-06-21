@@ -40,3 +40,14 @@ File: config.json
 
 * branding - Custom Branding Configuration
     * name - Your organization's name
+
+
+# Setup Process
+1. Clone this repository via `git clone https://github.com/zhiyan114/discord-saml.git`
+2. Install the required library via `npm install` (Node v16 is preferred)
+3. Complete the configuration file `config.json`
+4. Build the source via `npm run build`
+5. Drag the built files out of the directory `dist` (Very important because otherwise, rebuilding the source will cause you to loose the SP's certificate and may require you to reinstall them on ur IdP)
+6. Run the server via `node ./dist/src/index.js` (or `npm start` if you do not wish to move the `dist` directory)
+
+Any questions can be made via github Issues
